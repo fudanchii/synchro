@@ -18,31 +18,44 @@
 #ifndef _TEST_FWX_H
 #define _TEST_FWX_H
 
+#ifndef _STRING_H
+#include <string.h>
+#endif
+
+
+#define test_begin  do {\
+    int __test_counter = 1;\
+    int __test_failed  = 0;\
+    int __test_success = 0
+
+#define test_end  fprintf(stderr, "%d Tests, %d success, %d failed.\n",\
+        __test_counter - 1, __test_success, __test_failed);\
+}while (0)
+
 /*
  * Usage example
  *
- * assert_(unsigned int, gcd(55, 0), ==, 55)
+ * #! assert_(unsigned int, gcd(55, 0), ==, 55)
  *
- * `assert_` macro requires as parameter variable or
- * function return type, comparation operator, and expected value.
+ * `assert_` macro requires, as parameter, variable or
+ * function return type, comparison operator, and expected value.
+ *
  * Above, we see a test to `gcd` function with `unsigned int` return
  * type, and the return value to be expected is `55`
- *
- *
- * notice that before any assert_ call, user shall define variable named
- * __test_counter as `int` with initial value `1`
  *
  */
 #define assert_(typ,expr,op,cmp) do { \
     typ __rst = (typ)expr;\
-    printf("TEST%04d : ", __test_counter++);\
-    printf("%s ", #expr);\
+    fprintf(stderr, "TEST%04d : ", __test_counter++);\
+    fprintf(stderr, "%s ", #expr);\
     if (__rst op (typ)cmp) {\
-        printf("...PASSED\n");\
+        __test_success++;\
+        fprintf(stderr, "...PASSED\n");\
     }\
     else {\
-        printf("expected %d, get %d : ", cmp, __rst);\
-        printf("...FAILED\n");\
+        __test_failed++;\
+        fprintf(stderr, "expected %d, get %d : ", cmp, __rst);\
+        fprintf(stderr, "...FAILED\n");\
     }\
 } while(0);
 
@@ -60,7 +73,7 @@
  * `assert_mem` can be used to test string or memory content
  * for example:
  *
- * assert_mem(strdup("hoho\x00ho"), "hohoho", 6)
+ * #! assert_mem(strdup("hoho\x00ho"), "hohoho", 6)
  *
  * we see the test will failed since the duplicated string get truncated
  * by null character
@@ -68,19 +81,21 @@
 #define assert_mem(expr,cmp,len) do { \
     char *__memcnt = (char *) expr;\
     int __m_iterator;\
-    printf("TEST%04d : ", __test_counter++);\
-    printf("%s ", #expr);\
+    fprintf(stderr, "TEST%04d : ", __test_counter++);\
+    fprintf(stderr, "%s ", #expr);\
     if (memcmp(__memcnt,cmp,len) == 0) {\
-        printf("...PASSED\n");\
+        __test_success++;\
+        fprintf(stderr, "...PASSED\n");\
     }\
     else {\
-        printf("expected\n");\
+        __test_failed++;\
+        fprintf(stderr, "expected\n");\
         for (__m_iterator = 0; __m_iterator < len; __m_iterator++)\
-            printf("%02X ", cmp[__m_iterator]);\
-        printf("\nget\n");\
+            fprintf(stderr, "%02X ", cmp[__m_iterator]);\
+        fprintf(stderr, "\nget\n");\
         for (__m_iterator = 0; __m_iterator < len; __m_iterator++)\
-            printf("%02X ", __memcnt[__m_iterator]);\
-        printf("\n : ...FAILED\n");\
+            fprintf(stderr, "%02X ", __memcnt[__m_iterator]);\
+        fprintf(stderr, "\n : ...FAILED\n");\
     }\
 } while (0);
 
