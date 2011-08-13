@@ -13,4 +13,4 @@ lex.yy.c: test_lexicon.l
 	$(LEX) test_lexicon.l
 
 clean:
-	rm test_parser.tab.* lex.yy.c chouchou *.o
+	rm test_parser.tab.* lex.yy.c chouchou
