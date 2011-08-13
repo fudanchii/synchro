@@ -1,6 +1,14 @@
 %locations
 %{
 
+/*
+ * This file is part of synchro Test Suite.
+ * Lexical analyzer for test case extraction
+ * from source code comment/documentation
+ *
+ * Nurahmadie 2011
+ */ 
+
 #define YYERROR_VERBOSE
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,6 +1,14 @@
 %option noyywrap nodefault
 %{
 
+/*
+ * This file is part of synchro Test Suite.
+ * Lexical analyzer for test case extraction
+ * from source code comment/documentation
+ *
+ * Nurahmadie 2011
+ */ 
+
 #include "bstr/bstrlib.h"
 #include "test_parser.tab.h"
 
@@ -46,8 +54,7 @@ int last_line =1;
 }
 
 <AT_COPY>[\(a-zA-Z0-9_].*; {
-    yylval.s = bfromcstr(yytext);
-    return SENTENCE;
+    return get_set(SENTENCE, yytext);
 }
 
 <AT_COMMENT>"#!" {
@@ -60,8 +67,7 @@ int last_line =1;
 }
 
 <INITIAL>^"#"[ \t]*include[ \t]*["<][^ \t\n\">]+[">] {
-    yylval.s = bfromcstr(yytext);
-    return INCLUDES;
+    return get_set(INCLUDES, yytext);
 }
 
 <AT_COPY_AND_TEST>".==" {
@@ -89,37 +95,31 @@ int last_line =1;
 }
 
 <AT_COPY_AND_TEST>[a-zA-Z_][a-zA-Z0-9_]* {
-    yylval.s = bfromcstr(yytext);
-    return IDENTIFIER;
+    return get_set(IDENTIFIER, yytext);
 }
 
 <AT_COPY_AND_TEST>0|\-?[1-9][0-9]* { 
-    yylval.s = bfromcstr(yytext);
-    return NUMBER;
+    return get_set(NUMBER, yytext);
 }
 
 <AT_COPY_AND_TEST>"\"".*"\"" {
-    yylval.s = bfromcstr(yytext);
-    return STRING;
+    return get_set(STRING, yytext);
 }
 
 <AT_COPY_AND_TEST>"(" {
-    yylval.s = bfromcstr(yytext);
-    return OP;
+    return get_set(OP, yytext);
 }
 
 <AT_COPY_AND_TEST>")" {
-    yylval.s = bfromcstr(yytext);
-    return CP;
+    return get_set(CP, yytext);
 }
 
 <AT_COPY_AND_TEST>"+"|"-"|"*"|"/"|"%"   {
-    return get_operator(yytext);
+    return get_set(OPERATOR, yytext);
 }
 
 <AT_COPY_AND_TEST>"," {
-    yylval.s = bfromcstr(yytext);
-    return COMMA;
+    return get_set(COMMA, yytext);
 }
 
 
@@ -131,8 +131,7 @@ int last_line =1;
 <INITIAL,AT_COMMENT,AT_COPY_AND_TEST,AT_COPY>. { }
 %%
 
-int get_operator(char *input) {
+int get_set(int state, char *input) {
     yylval.s = bfromcstr(input);
-    //fprintf(stderr, "%s\n", bdata(str));
-    return OPERATOR;
+    return state;
 }
