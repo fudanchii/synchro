@@ -81,6 +81,7 @@
  * by null character
  *
  * #= assert_mem(strdup("hohoho"), "hohoho", 6);
+ * #! strdup("aloha") .== "aloha"
  *
  */
 #define assert_mem(expr,cmp,len) do { \

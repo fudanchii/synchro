@@ -64,6 +64,7 @@ line:INCLUDES              { pp.includes = do_concat(3, pp.includes, $1, bfromcs
 
 
 accept:SENTENCE
+    | expr EQU STRING      { $$ = bformat("assert_mem(%s, %s, %d);", bdata($1), bdata($3), blength($3) - 2); }
     | expr EQU term        { $$ = bformat("assert_eq(%s, %s);", bdata($1), bdata($3)); }
     | expr GT_EQU term     { $$ = bformat("assert_ge(%s, %s);", bdata($1), bdata($3)); }
     | expr LT_EQU term     { $$ = bformat("assert_le(%s, %s);", bdata($1), bdata($3)); }
@@ -78,6 +79,7 @@ expr: term_and_function
 
 term_and_function: func_def
                  | term
+                 | STRING
                  ;
 
 func_def: IDENTIFIER OP arg_list CP     { $$ = do_concat(4, $1, $2, $3, $4); }
@@ -93,7 +95,6 @@ one_arg_list: expr
 
 term: IDENTIFIER
     | NUMBER
-    | STRING
     | OP expr CP                         { $$ = do_concat(3, $1, $2, $3); }
     ;
 

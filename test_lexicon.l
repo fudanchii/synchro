@@ -94,6 +94,10 @@ int last_line =1;
     return LT;
 }
 
+<AT_COPY_AND_TEST>"\""[^"]*"\"" {
+    return get_set(STRING, yytext);
+}
+
 <AT_COPY_AND_TEST>[a-zA-Z_][a-zA-Z0-9_]* {
     return get_set(IDENTIFIER, yytext);
 }
@@ -102,9 +106,6 @@ int last_line =1;
     return get_set(NUMBER, yytext);
 }
 
-<AT_COPY_AND_TEST>"\"".*"\"" {
-    return get_set(STRING, yytext);
-}
 
 <AT_COPY_AND_TEST>"(" {
     return get_set(OP, yytext);
