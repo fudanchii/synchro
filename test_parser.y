@@ -7,7 +7,7 @@
  * from source code comment/documentation
  *
  * Nurahmadie 2011
- */ 
+ */
 
 #define YYERROR_VERBOSE
 #include <stdio.h>
@@ -71,7 +71,7 @@ accept:SENTENCE
     | expr N_EQU  term     { $$ = bformat("assert_ne(%s, %s);", bdata($1), bdata($3)); }
     | expr GT     term     { $$ = bformat("assert_gt(%s, %s);", bdata($1), bdata($3)); }
     | expr LT     term     { $$ = bformat("assert_lt(%s, %s);", bdata($1), bdata($3)); }
-    ; 
+    ;
 
 expr: term_and_function
     | expr OPERATOR term_and_function   { $$ = do_concat(3, $1, $2, $3); }
@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
     FILE *fin;
     char *fname;
     int len;
-    
+
     if (!(fin = fopen(argv[1], "r"))) {
         fprintf(stderr, "Error opening file : %s\n", argv[1]);
         abort();
@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
 
     fname = argv[1];
     len = strlen(fname);
-    
+
     yyrestart(fin);
 
     pp.includes = bfromcstr("");
@@ -150,11 +150,11 @@ int main(int argc, char **argv) {
     puts(bdata(pp.in_main));
     puts("test_end;\n"
          "return 0;\n}\n");
-    
+
     return 0;
 }
 
 yyerror(char *s) {
-    fprintf(stderr, "%d:%d:%s\n", yylloc.last_line, yylloc.last_column, s);
+    fprintf(stderr, "%d:%d:%s\n", yylloc.last_line, yylloc.first_column, s);
 }
 

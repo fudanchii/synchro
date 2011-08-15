@@ -7,7 +7,7 @@
  * from source code comment/documentation
  *
  * Nurahmadie 2011
- */ 
+ */
 
 #include "bstr/bstrlib.h"
 #include "test_parser.tab.h"
@@ -15,14 +15,19 @@
 int get_operator(char *input);
 
 /* handle locations */
-int yycolumn = 1;
-int last_line =1;
+int yycolumn  = 1;
+int last_line = 1;
+int nlineflag = 0;
 
 #define YY_USER_ACTION { \
+    if (nlineflag) {\
+        yylineno +=1; yycolumn = 1;\
+        nlineflag = 0;\
+    }\
     if (yytext[0] == '\n') {\
-        yylineno += 1; yycolumn = 1;\
+        nlineflag = 1;\
     } \
-    yylloc.last_line    = yylineno - 1; \
+    yylloc.last_line    = yylineno; \
     yylloc.first_column = yycolumn; \
     yylloc.last_column  = yycolumn + yyleng - 1; \
     yycolumn += yyleng; \
@@ -102,7 +107,7 @@ int last_line =1;
     return get_set(IDENTIFIER, yytext);
 }
 
-<AT_COPY_AND_TEST>0|\-?[1-9][0-9]* { 
+<AT_COPY_AND_TEST>0|\-?[1-9][0-9]* {
     return get_set(NUMBER, yytext);
 }
 
@@ -136,3 +141,4 @@ int get_set(int state, char *input) {
     yylval.s = bfromcstr(input);
     return state;
 }
+
