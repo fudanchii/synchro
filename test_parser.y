@@ -13,10 +13,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "bstr/utils.h"
 #include "bstr/bstrlib.h"
 #include <stdarg.h>
 
-bstring do_concat(int num, ...);
 
 struct parse_param {
     bstring includes;
@@ -100,21 +100,6 @@ term: IDENTIFIER
 
 %%
 
-bstring do_concat(int num, ...) {
-    bstring lval = bfromcstr("");
-    va_list arg;
-
-    va_start(arg, num);
-    while (num--) {
-        bstring tstr = va_arg(arg, bstring);
-        int chlen = lval->slen + tstr->slen;
-        if (lval->mlen < chlen)
-            balloc(lval, chlen);
-        bconcat(lval, tstr);
-    }
-    va_end(arg);
-    return lval;
-}
 
 int main(int argc, char **argv) {
     FILE *fin;

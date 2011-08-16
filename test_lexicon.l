@@ -1,4 +1,4 @@
-%option noyywrap nodefault
+%option noyywrap
 %{
 
 /*
@@ -10,6 +10,7 @@
  */
 
 #include "bstr/bstrlib.h"
+#include "bstr/utils.h"
 #include "test_parser.tab.h"
 
 int get_operator(char *input);
@@ -18,6 +19,7 @@ int get_operator(char *input);
 int yycolumn  = 1;
 int last_line = 1;
 int nlineflag = 0;
+static bstring in_text;
 
 #define YY_USER_ACTION { \
     if (nlineflag) {\
@@ -38,10 +40,12 @@ int nlineflag = 0;
 %x AT_COMMENT
 %x AT_COPY
 %x AT_COPY_AND_TEST
+%x AT_STRING
+%x AT_QUOTE
 
 %%
 
-"/*" {
+<INITIAL>"/*" {
     BEGIN AT_COMMENT;
 }
 
@@ -53,7 +57,7 @@ int nlineflag = 0;
     BEGIN AT_COPY;
 }
 
-<AT_COPY>\n {
+<AT_COPY,AT_COPY_AND_TEST>\n {
     BEGIN AT_COMMENT;
     return EOL;
 }
@@ -64,11 +68,6 @@ int nlineflag = 0;
 
 <AT_COMMENT>"#!" {
     BEGIN AT_COPY_AND_TEST;
-}
-
-<AT_COPY_AND_TEST>\n {
-    BEGIN AT_COMMENT;
-    return EOL;
 }
 
 <INITIAL>^"#"[ \t]*include[ \t]*["<][^ \t\n\">]+[">] {
@@ -99,8 +98,31 @@ int nlineflag = 0;
     return LT;
 }
 
-<AT_COPY_AND_TEST>"\""[^"]*"\"" {
-    return get_set(STRING, yytext);
+<AT_COPY_AND_TEST>\" {
+    in_text = bfromcstr("");
+    in_text = do_concat(2, in_text, bfromcstr(yytext));
+    BEGIN AT_STRING;
+}
+
+
+<AT_STRING>\\ {
+    in_text = do_concat(2, in_text, bfromcstr(yytext));
+    BEGIN AT_QUOTE;
+}
+
+<AT_STRING>\" {
+    in_text = do_concat(2, in_text, bfromcstr(yytext));
+    BEGIN AT_COPY_AND_TEST;
+    return get_set(STRING, bdata(in_text));
+}
+
+<AT_STRING>. {
+    in_text = do_concat(2, in_text, bfromcstr(yytext));
+}
+
+<AT_QUOTE>. {
+    in_text = do_concat(2, in_text, bfromcstr(yytext));
+    BEGIN AT_STRING;
 }
 
 <AT_COPY_AND_TEST>[a-zA-Z_][a-zA-Z0-9_]* {
