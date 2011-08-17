@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
     pp.in_main  = bfromcstr("");
 
     if (fname[len-1] == 'c')
-        fname[len-1] == 'h';
+        fname[len-1] = 'h';
 
     fprintf(stdout,"#include \"%s\"\n", fname);
     fprintf(stdout,"#include <stdio.h>\n");
