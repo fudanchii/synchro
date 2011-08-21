@@ -22,4 +22,4 @@ sample: test_fwx.h chouchou
 	./sample
 
 clean:
-	rm test_parser.tab.* *.o lex.yy.c chouchou sample
+	rm test_parser.tab.* *.o lex.yy.c chouchou sample sample.c
