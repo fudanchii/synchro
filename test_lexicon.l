@@ -129,7 +129,7 @@ static bstring in_text;
     return get_set(IDENTIFIER, yytext);
 }
 
-<AT_COPY_AND_TEST>0|\-?[1-9][0-9]* {
+<AT_COPY_AND_TEST>0|(\-|\+)?[1-9][0-9]* {
     return get_set(NUMBER, yytext);
 }
 
