@@ -56,8 +56,8 @@
     }\
     else {\
         __test_failed++;\
-        fprintf(stderr, "expect %d, get %d : ", cmp, __rst);\
         fprintf(stderr, "...FAILED\n");\
+        fprintf(stderr, "           expect : %d\n           result : %d\n", cmp, __rst);\
     }\
 } while(0);
 
@@ -95,13 +95,14 @@
     }\
     else {\
         __test_failed++;\
-        fprintf(stderr, "\nexpect :\n");\
+        fprintf(stderr, "...FAILED");\
+        fprintf(stderr, "\n           expect : ");\
         for (__m_iterator = 0; __m_iterator < len; __m_iterator++)\
             fprintf(stderr, "%02X ", cmp[__m_iterator]);\
-        fprintf(stderr, "\nget :\n");\
+        fprintf(stderr, "\n           result : ");\
         for (__m_iterator = 0; __m_iterator < len; __m_iterator++)\
             fprintf(stderr, "%02X ", __memcnt[__m_iterator]);\
-        fprintf(stderr, "\n : ...FAILED\n");\
+        fprintf(stderr, "\n");\
     }\
 } while (0);
 
