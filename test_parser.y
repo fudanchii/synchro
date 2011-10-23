@@ -128,12 +128,12 @@ int main(int argc, char **argv) {
     yyparse();
     fclose(fin);
 
-    puts(bdata(pp.includes));
-    puts("\n"
+    fprintf(stdout, bdata(pp.includes));
+    fprintf(stdout, "\n"
          "int main() {\n"
          "test_begin;\n");
-    puts(bdata(pp.in_main));
-    puts("test_end;\n"
+    fprintf(stdout, bdata(pp.in_main));
+    fprintf(stdout, "test_end;\n"
          "return 0;\n}\n");
 
     return 0;
@@ -143,3 +143,15 @@ yyerror(char *s) {
     fprintf(stderr, "%d:%d:%s\n", yylloc.last_line, yylloc.first_column, s);
 }
 
+int parse_arg(int argc, char **argv) {
+    int i;
+    FILE *f_used;
+    for (i = 0; i < argc; i++) {
+        if (strcmp(argv[argc], "-c") == 0) { // create stub
+            continue;
+        }
+        if (strcmp(argv[argc], "-t") == 0) { // use testall protocol
+            continue;
+        }
+    }
+}
