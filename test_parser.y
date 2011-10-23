@@ -122,18 +122,18 @@ int main(int argc, char **argv) {
     if (fname[len-1] == 'c')
         fname[len-1] = 'h';
 
-    fprintf(stdout,"#include \"%s\"\n", fname);
-    fprintf(stdout,"#include <stdio.h>\n");
+    printf("#include \"%s\"\n", fname);
+    printf("#include <stdio.h>\n");
 
     yyparse();
     fclose(fin);
 
-    puts(bdata(pp.includes));
-    puts("\n"
+    printf(bdata(pp.includes));
+    printf("\n"
          "int main() {\n"
          "test_begin;\n");
-    puts(bdata(pp.in_main));
-    puts("test_end;\n"
+    printf(bdata(pp.in_main));
+    printf("test_end;\n"
          "return 0;\n}\n");
 
     return 0;
