@@ -106,12 +106,13 @@ int main(int argc, char **argv) {
     char *fname;
     int len;
 
-    if (!(fin = fopen(argv[1], "r"))) {
-        fprintf(stderr, "Error opening file : %s\n", argv[1]);
+    fname = argv[1];
+
+    if (!(fin = fopen(fname, "r"))) {
+        fprintf(stderr, "Error opening file : %s\n", fname);
         abort();
     }
 
-    fname = argv[1];
     len = strlen(fname);
 
     yyrestart(fin);
