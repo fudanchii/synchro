@@ -38,7 +38,7 @@
  * `assert_` macro requires, as parameter, variable or
  * function return type, comparison operator, and expected value.
  *
- * Above, we see a test which results 45 wit unsigned int
+ * Above, we see a test which results 45 with unsigned int
  * type, and the return value to be expected is `55`
  * the test will fail
  *
@@ -70,6 +70,8 @@
 #define assert_ne(expr, cmp)    assert_(int, expr, !=, cmp)
 #define assert_gt(expr, cmp)    assert_(int, expr, > , cmp)
 #define assert_lt(expr, cmp)    assert_(int, expr, < , cmp)
+#define assert_true(expr)       assert_(int, expr, !=, 0)
+#define assert_false(expr)      assert_(int, expr, ==, 0)
 
 /*
  * `assert_mem` can be used to test string or memory content
@@ -98,10 +100,10 @@
         fprintf(stderr, "...FAILED");\
         fprintf(stderr, "\n           expect : ");\
         for (__m_iterator = 0; __m_iterator < len; __m_iterator++)\
-            fprintf(stderr, "%02X ", cmp[__m_iterator]);\
+            fprintf(stderr, "%02X ",(unsigned char) cmp[__m_iterator]);\
         fprintf(stderr, "\n           result : ");\
         for (__m_iterator = 0; __m_iterator < len; __m_iterator++)\
-            fprintf(stderr, "%02X ", __memcnt[__m_iterator]);\
+            fprintf(stderr, "%02X ", (unsigned char)__memcnt[__m_iterator]);\
         fprintf(stderr, "\n");\
     }\
 } while (0);
