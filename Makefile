@@ -8,7 +8,7 @@ ALL: chouchou
 
 chouchou: test_parser lex.yy.c
 	cd bstr; make -s
-	$(CC) -o $(O) $(lbstr) lex.yy.c test_parser.tab.c
+	$(CC) -g -o $(O) $(lbstr) lex.yy.c test_parser.tab.c
 
 test_parser: test_parser.y
 	$(YY) test_parser.y
@@ -18,7 +18,7 @@ lex.yy.c: test_lexicon.l
 
 sample: test_fwx.h chouchou
 	./$(O) test_fwx.h > sample.c
-	$(CC) -o sample sample.c
+	$(CC) -g -o sample sample.c
 	./sample
 
 clean:
