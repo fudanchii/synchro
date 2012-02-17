@@ -75,10 +75,8 @@ typedef struct s_bchain {
 sbchain bchain = {0, 0};
 sbchain *ccur = &bchain;
 
-
 int add_tochain(bstring bstr) {
-    //check whether bstr and ccur is allocated
-    if (bstr && ccur) {
+    if (bstr) {
         sbchain *tmp = bstr__alloc(sizeof(struct s_bchain));
         if (tmp) {
             tmp->bstr = bstr;
@@ -90,7 +88,6 @@ int add_tochain(bstring bstr) {
     }
     return BSTR_ERR;
 }
-
 
 void bnuke(void) {
     //bchain is managed.
