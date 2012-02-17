@@ -66,6 +66,46 @@
 
 #define bBlockCopy(D,S,L) { if ((L) > 0) bstr__memmove ((D),(S),(L)); }
 
+
+typedef struct s_bchain {
+    bstring bstr;
+    struct s_bchain *n;
+} sbchain;
+
+sbchain bchain = {0, 0};
+sbchain *ccur = &bchain;
+
+
+int add_tochain(bstring bstr) {
+    //check whether bstr and ccur is allocated
+    if (bstr && ccur) {
+        sbchain *tmp = bstr__alloc(sizeof(struct s_bchain));
+        if (tmp) {
+            tmp->bstr = bstr;
+            tmp->n = 0;
+            ccur->n = tmp;
+            ccur = tmp;
+            return BSTR_OK;
+        }
+    }
+    return BSTR_ERR;
+}
+
+
+void bnuke(void) {
+    //bchain is managed.
+    //Start from the next node
+    sbchain *i = bchain.n;
+    sbchain *n;
+    do {
+        n = i->n;
+        bdestroy(i->bstr);
+        bstr__free(i);
+        i = n;
+    } while(i);
+}
+
+
 /* Compute the snapped size for a given requested size.  By snapping to powers
    of 2 like this, repeated reallocations are avoided. */
 static int snapUpSize (int i) {
@@ -203,6 +243,7 @@ size_t j;
 	}
 
 	bstr__memcpy (b->data, str, j+1);
+    add_tochain(b);
 	return b;
 }
 
@@ -233,6 +274,7 @@ size_t j;
 	}
 
 	bstr__memcpy (b->data, str, j+1);
+    add_tochain(b);
 	return b;
 }
 
@@ -264,6 +306,7 @@ int i;
 	if (len > 0) bstr__memcpy (b->data, blk, (size_t) len);
 	b->data[len] = (unsigned char) '\0';
 
+    add_tochain(b);
 	return b;
 }
 
@@ -441,6 +484,7 @@ int i,j;
 	if (i) bstr__memcpy ((char *) b0->data, (char *) b->data, i);
 	b0->data[b0->slen] = (unsigned char) '\0';
 
+    add_tochain(b0);
 	return b0;
 }
 

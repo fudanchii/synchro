@@ -53,6 +53,12 @@ extern int bassignblk (bstring a, const void * s, int len);
 /* Destroy function */
 extern int bdestroy (bstring b);
 
+/* Nuke all bstring created.
+ * Please note that this function
+ * is not thread-safe
+ **/
+extern void bnuke(void);
+
 /* Space allocation hinting functions */
 extern int balloc (bstring s, int len);
 extern int ballocmin (bstring b, int len);

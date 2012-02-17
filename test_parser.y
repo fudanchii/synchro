@@ -128,6 +128,7 @@ int main(int argc, char **argv) {
 
     yyparse();
     fclose(fin);
+    yylex_destroy();
 
     printf(bdata(pp.includes));
     printf("\n"
@@ -137,6 +138,7 @@ int main(int argc, char **argv) {
     printf("test_end;\n"
          "return 0;\n}\n");
 
+    bnuke();
     return 0;
 }
 
