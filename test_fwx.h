@@ -21,12 +21,12 @@
 #include <string.h>
 
 #define test_begin  do {\
-    int __test_counter = 1;\
-    int __test_failed  = 0;\
-    int __test_success = 0;
+    int test_counter = 1;\
+    int test_failed  = 0;\
+    int test_success = 0;
 
 #define test_end  fprintf(stderr, "%d Tests, %d success, %d failed.\n",\
-        __test_counter - 1, __test_success, __test_failed);\
+        test_counter - 1, test_success, test_failed);\
 }while (0)
 
 /*
@@ -47,17 +47,17 @@
  *
  */
 #define assert_(typ,expr,op,cmp) do { \
-    typ __rst = (typ)expr;\
-    fprintf(stderr, "TEST%04d : ", __test_counter++);\
+    typ test_rst = (typ)expr;\
+    fprintf(stderr, "TEST%04d : ", test_counter++);\
     fprintf(stderr, "%s %s %s : ", #expr, #op, #cmp);\
-    if (__rst op (typ)cmp) {\
-        __test_success++;\
+    if (test_rst op (typ)cmp) {\
+        test_success++;\
         fprintf(stderr, "...PASSED\n");\
     }\
     else {\
-        __test_failed++;\
+        test_failed++;\
         fprintf(stderr, "...FAILED\n");\
-        fprintf(stderr, "           expect : %d\n           result : %d\n", cmp, __rst);\
+        fprintf(stderr, "           expect : %d\n           result : %d\n", cmp, test_rst);\
     }\
 } while(0);
 
@@ -87,23 +87,23 @@
  *
  */
 #define assert_mem(expr,cmp,len) do { \
-    char *__memcnt = (char *) expr;\
-    int __m_iterator;\
-    fprintf(stderr, "TEST%04d : ", __test_counter++);\
+    char *test_memcnt = (char *) expr;\
+    int test_m_iterator;\
+    fprintf(stderr, "TEST%04d : ", test_counter++);\
     fprintf(stderr, "%s == %s : ", #expr, #cmp);\
-    if (memcmp(__memcnt,cmp,len) == 0) {\
-        __test_success++;\
+    if (memcmp(test_memcnt,cmp,len) == 0) {\
+        test_success++;\
         fprintf(stderr, "...PASSED\n");\
     }\
     else {\
-        __test_failed++;\
+        test_failed++;\
         fprintf(stderr, "...FAILED");\
         fprintf(stderr, "\n           expect : ");\
-        for (__m_iterator = 0; __m_iterator < len; __m_iterator++)\
-            fprintf(stderr, "%02X ",(unsigned char) cmp[__m_iterator]);\
+        for (test_m_iterator = 0; test_m_iterator < len; test_m_iterator++)\
+            fprintf(stderr, "%02X ",(unsigned char) cmp[test_m_iterator]);\
         fprintf(stderr, "\n           result : ");\
-        for (__m_iterator = 0; __m_iterator < len; __m_iterator++)\
-            fprintf(stderr, "%02X ", (unsigned char)__memcnt[__m_iterator]);\
+        for (test_m_iterator = 0; test_m_iterator < len; test_m_iterator++)\
+            fprintf(stderr, "%02X ", (unsigned char)test_memcnt[test_m_iterator]);\
         fprintf(stderr, "\n");\
     }\
 } while (0);
